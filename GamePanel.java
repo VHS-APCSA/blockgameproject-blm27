@@ -28,6 +28,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 	private Paddle paddle;
 	private Bullet bullet;
 	private Lives lives;
+	private Score score;
 	//ArrayList of game objects
 	private ArrayList<GameObject> pieces;
 	/*
@@ -69,14 +70,16 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 	public GamePanel(int width, int height) {
 		this.width = width;
 		this.height = height;
-		blocks = new Block[6][8];
+		blocks = new Block[1][8];
 		lives = new Lives(width, height);
+		score = new Score(width, height);
 		ball = new Ball(width, height, lives);
 		paddle = new Paddle(width, height);
 		pieces = new ArrayList<GameObject>();
 		pieces.add(ball);
 		pieces.add(paddle);
 		pieces.add(lives);
+		pieces.add(score);
 		thread = new Thread(this);
 		thread.start();
 		setBackground(Color.black);
@@ -146,6 +149,9 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 					if(blocks[row][col].destroyedBy(ball)) 
 					{
 						blocks[row][col] = null;
+						score.increaseScore();
+
+
 					}
 				}
 				if(blocks[row][col] != null && bullet != null && blocks[row][col].intersects(bullet))
@@ -172,7 +178,9 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 	{
 		super.paintComponent(g);
 		//iterate over the blocks and draw them
-		for(Block[] blockRow : blocks) {
+		boolean haveBlocks = false;
+		for(Block[] blockRow : blocks) 
+		{
 			for(Block block : blockRow)
 			{
 				if(block != null)
@@ -183,32 +191,44 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 						((Movable) block).move();
 					}
 				}
-			}
-		}
-		//iterate over the game objects, draw and move them
-		for(GameObject piece : pieces)
-		{
-			if(piece != null)
-			{
-				piece.draw(g);
-				if(piece instanceof Movable)
+				if(block != null)
 				{
-					((Movable) piece).move();
+					haveBlocks = true;
 				}
 			}
+			if(!haveBlocks)
+			{
+				g.setColor(Color.green);
+				g.setFont(new Font(g.getFont().getName(), Font.BOLD, 50));
+				g.drawString("YOU WIN", width / 2 - 150, height / 2 - 10);
+				thread.interrupt();
+			}
+
+			//iterate over the game objects, draw and move them
+			for(GameObject piece : pieces)
+			{
+				if(piece != null)
+				{
+					piece.draw(g);
+					if(piece instanceof Movable)
+					{
+						((Movable) piece).move();
+					}
+				}
+			}
+			checkCollision();
+			//if there are no more lives left display a game over message
+			//and stop the thread from running.
+			if(lives.getLives() == 0)
+			{
+				g.setColor(Color.red);
+				g.setFont(new Font(g.getFont().getName(), Font.BOLD, 50));
+				g.drawString("GAME OVER", width / 2 - 150, height / 2 - 10);
+				thread.interrupt();
+			}
+			//smooths drawing on linux
+			Toolkit.getDefaultToolkit().sync();
 		}
-		checkCollision();
-		//if there are no more lives left display a game over message
-		//and stop the thread from running.
-		if(lives.getLives() == 0)
-		{
-			g.setColor(Color.red);
-			g.setFont(new Font(g.getFont().getName(), Font.BOLD, 50));
-			g.drawString("GAME OVER", width / 2 - 150, height / 2 - 10);
-			thread.interrupt();
-		}
-		//smooths drawing on linux
-		Toolkit.getDefaultToolkit().sync();
 	}
 	@Override
 	public void run()

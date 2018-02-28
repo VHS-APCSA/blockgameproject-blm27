@@ -6,7 +6,7 @@ public class Ball extends GameObject implements Movable {
 	private Lives lives;
 	public Ball(int gwidth, int gheight, Lives lives) {
 		super(gwidth, gheight);
-		width = 20;
+		width = 125;
 		height = width;
 		speed = 12;
 		this.lives = lives;
