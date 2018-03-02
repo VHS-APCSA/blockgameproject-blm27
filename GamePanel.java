@@ -101,6 +101,10 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 				{
 					blocks[row][col] = new FallingBlock(x % width, y + gap, blockWidth);
 				}
+				else if(random == 1)
+				{
+					blocks[row][col] = new MoveBlock(x % width, y + gap, blockWidth);
+				}
 				else
 				{
 					blocks[row][col] = new Block(x % width, y + gap, blockWidth);
