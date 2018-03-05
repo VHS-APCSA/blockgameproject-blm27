@@ -155,8 +155,12 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 						blocks[row][col] = null;
 						score.increaseScore();
 
-
 					}
+					
+				}
+				if(blocks[row][col] != null && blocks[row][col].getY() > height)
+				{
+					blocks[row][col] = null;
 				}
 				if(blocks[row][col] != null && bullet != null && blocks[row][col].intersects(bullet))
 				{
@@ -183,6 +187,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 		super.paintComponent(g);
 		//iterate over the blocks and draw them
 		boolean haveBlocks = false;
+		int countBlocks = 0;
 		for(Block[] blockRow : blocks) 
 		{
 			for(Block block : blockRow)
@@ -190,6 +195,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 				if(block != null)
 				{
 					block.draw(g);
+					countBlocks++;
 					if(block instanceof Movable)
 					{
 						((Movable) block).move();
@@ -201,6 +207,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 				}
 			}
 		}
+		System.out.println(countBlocks);
 		if(!haveBlocks)
 		{
 			g.setColor(Color.green);
