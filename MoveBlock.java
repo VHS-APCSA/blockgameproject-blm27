@@ -20,7 +20,6 @@ public class MoveBlock extends Block implements Movable {
 			flag = true;
 			y = (int)(Math.random() * 481) + 200;
 			x = (int)(Math.random() * 581);
-			
 		}
 	}
 }
