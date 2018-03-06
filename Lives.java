@@ -6,7 +6,7 @@ public class Lives extends GameObject {
 	private int lives;
 	public Lives(int gameWidth, int gameHeight) {
 		super(gameWidth, gameHeight);
-		lives = 3;
+		lives = 5;
 		x = gameWidth - 50;
 		y = 50;
 		color = Color.yellow;

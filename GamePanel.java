@@ -27,6 +27,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 	private Ball ball;
 	private Paddle paddle;
 	private Bullet bullet;
+	private Bomb bomb;
 	private Lives lives;
 	private Score score;
 	//ArrayList of game objects
@@ -104,6 +105,10 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 				else if(random == 1)
 				{
 					blocks[row][col] = new MoveBlock(x % width, y + gap, blockWidth);
+				}
+				else if(random == 2)
+				{
+					blocks[row][col] = new MoveWhenHitBlock(x % width, y + gap, blockWidth);
 				}
 				else
 				{
@@ -266,6 +271,11 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
+		if(bomb == null)
+		{
+			bomb = new Bomb(width, height, paddle);
+			pieces.add(bomb);
+		}
 
 
 	}

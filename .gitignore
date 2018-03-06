@@ -17,3 +17,5 @@
 /DisappearingBlock.class
 /SpecialBlock.class
 /MoveBlock.class
+/MoveWhenHitBlock.class
+/Bomb.class
