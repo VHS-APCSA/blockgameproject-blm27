@@ -108,7 +108,7 @@ public class Ball extends GameObject implements Movable {
 		y += vy;
 		if(y > gameHeight) {
 			regenBall();
-			lives.die();
+			lives.count();
 		}
 		/*  The extra x += vx is intentional. 
 		 *  If the ball is moving fast enough (vx or vy > ball diameter) then the ball will be completely off screen  when it bounces.

@@ -2,7 +2,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
-public class Lives extends GameObject {
+public class Lives extends GameObject implements Counter{
 	private int lives;
 	public Lives(int gameWidth, int gameHeight) {
 		super(gameWidth, gameHeight);
@@ -11,7 +11,8 @@ public class Lives extends GameObject {
 		y = 50;
 		color = Color.yellow;
 	}
-	public void die()
+	@Override
+	public void count()
 	{
 		lives--;
 	}
@@ -26,4 +27,5 @@ public class Lives extends GameObject {
 		g.setFont(new Font(g.getFont().getName(), Font.BOLD, 24));
 		g.drawString(lives + "", x, y);
 	}
+
 }

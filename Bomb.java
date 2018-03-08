@@ -15,4 +15,4 @@ public class Bomb extends GameObject implements Movable{
 	{
 		y -= speed;
 	}
-}
+}   

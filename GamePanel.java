@@ -63,6 +63,17 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 			ball.launch(Math.random() * Math.PI / 2 + Math.PI / 4);
 		}
 	};
+	private Action bombs = new AbstractAction("bombs") {
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+				if(bomb == null && count > 0)
+				{
+					bomb = new Bomb(width, height, paddle);
+					count--;
+					pieces.add(bomb);
+				}
+			}
+		};
 	/**
 	 * Initializes instance variables.
 	 * @param width JPanel width in pixels.
@@ -125,6 +136,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 		registerKeyBinding(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "right", right);
 		registerKeyBinding(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true), "stop", stop);
 		registerKeyBinding(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false), "fire", fire);
+		registerKeyBinding(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, true), "bombs", bombs);
 	}
 	/**
 	 * Helper method to map a KeyStroke to an action.
@@ -155,13 +167,12 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 				if(blocks[row][col] != null && blocks[row][col].intersects(ball))
 				{
 					ball.bounce(blocks[row][col]);
-					if(blocks[row][col].destroyedBy(ball)) 
 					{
 						blocks[row][col] = null;
 						score.increaseScore();
 
 					}
-					
+
 				}
 				if(blocks[row][col] != null && blocks[row][col].getY() > height)
 				{
@@ -179,11 +190,35 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 						}
 					}
 				}
+				if(blocks[row][col] != null && bomb != null && blocks[row][col].intersects(bomb))
+				{
+					blocks[row][col] = null;
+					if(row - 1 >= 0)
+					{
+						blocks[row-1][col] = null;
+					}
+					if(col + 1 <= 0)
+					{
+						blocks[row][col+1] = null;
+					}
+					if(col - 1 >= 0)
+					{
+						blocks[row][col-1] = null;
+					}
+					bomb = null;
+					for(int index = 0; index < pieces.size(); index++)
+					{
+						if(pieces.get(index) instanceof Bomb)
+						{
+							pieces.remove(index);
+						}
+					}
+				}
 			}
-		}
-		if(paddle.intersects(ball))
-		{
-			ball.bounce(paddle);
+			if(paddle.intersects(ball))
+			{
+				ball.bounce(paddle);
+			}
 		}
 	}
 	@Override
@@ -212,7 +247,6 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 				}
 			}
 		}
-		System.out.println(countBlocks);
 		if(!haveBlocks)
 		{
 			g.setColor(Color.green);
@@ -269,15 +303,10 @@ public class GamePanel extends JPanel implements Runnable, MouseListener {
 			pieces.add(bullet);
 		}
 	}
+	int count = 3;
 	@Override
-	public void mousePressed(MouseEvent e) {
-		if(bomb == null)
-		{
-			bomb = new Bomb(width, height, paddle);
-			pieces.add(bomb);
-		}
-
-
+	public void mousePressed(MouseEvent e)
+	{
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
